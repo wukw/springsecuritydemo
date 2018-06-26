@@ -1,0 +1,14 @@
+.gradle
+.idea
+*.iml
+*.class
+common-order/common-order-app/build/*
+
+
+
+
+libs
+jar
+META-INF
+resources
+*.adoc

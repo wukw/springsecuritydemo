@@ -1,0 +1,57 @@
+group 'springsecuritydemo'
+version '1.0-SNAPSHOT'
+
+
+buildscript {
+    ext {
+        springBootVersion = '2.0.2.RELEASE'
+    }
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+repositories {
+
+
+
+    maven { url "http://365yunbao.cn:8081/nexus/content/repositories/thirdparty/" }
+    jcenter()
+    mavenCentral()
+    maven { url "http://365yunbao.cn:8081/nexus/content/repositories/central/" }
+    maven { url "http://365yunbao.cn:8081/nexus/content/repositories/spring-io/" }
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+
+
+}
+allprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+    sourceCompatibility = 1.8
+
+    dependencies {
+        compile("org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE")
+        compile("org.springframework.boot:spring-boot-starter-security")
+        compile ("org.springframework.security.oauth:spring-security-oauth2:2.3.3.BUILD-SNAPSHOT")
+        compile 'org.springframework.boot:spring-boot-starter-data-redis'
+        // https://mvnrepository.com/artifact/org.springframework.security/spring-security-jwt
+        compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.9.RELEASE'
+        // https://mvnrepository.com/artifact/com.auth0/java-jwt
+        compile group: 'com.auth0', name: 'java-jwt', version: '3.4.0'
+        // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+        compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+        // https://mvnrepository.com/artifact/com.alibaba/fastjson
+        compile group: 'com.alibaba', name: 'fastjson', version: '1.2.47'
+
+
+
+    }
+}
