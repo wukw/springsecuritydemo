@@ -52,6 +52,12 @@ allprojects {
         compile group: 'com.alibaba', name: 'fastjson', version: '1.2.47'
 
 
+        compile 'org.springframework.social:spring-social-config:1.1.6.RELEASE'
+        
+        compile 'org.springframework.social:spring-social-core:1.1.6.RELEASE'
+
+
+
 
     }
 }

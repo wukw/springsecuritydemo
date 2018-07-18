@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @EnableResourceServer
@@ -15,7 +16,9 @@ public class ResourceServerConfigurer  extends ResourceServerConfigurerAdapter {
 
 
     @Autowired
-    protected AuthenticationSuccessHandler imoocAuthenticationSuccessHandler;
+    AuthenticationSuccessHandler imoocAuthenticationSuccessHandler;
+    @Autowired
+    AuthenticationFailureHandler imoocAuthenticationFailureHandler;
 
 
     private static final String DEMO_RESOURCE_ID = "order";
@@ -28,19 +31,16 @@ public class ResourceServerConfigurer  extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.formLogin()
-                .loginPage("/user/loginpage")
                 .loginProcessingUrl("/user/login")
-                .successHandler(imoocAuthenticationSuccessHandler);
-
-
-
+                .successHandler(imoocAuthenticationSuccessHandler)
+                .failureHandler(imoocAuthenticationFailureHandler);
       http
                 .requestMatchers().anyRequest()
                 .and()
                 .anonymous()
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/user/**").permitAll()
+                    .antMatchers("/user/*","/login").permitAll()
                     .anyRequest().authenticated()
                 .and()
                 .csrf().disable();
