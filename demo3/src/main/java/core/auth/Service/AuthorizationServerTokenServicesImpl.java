@@ -1,4 +1,4 @@
-package core.auth.service;
+package core.auth.Service;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.AuthenticationException;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-@Component
-@Configuration
+//@Component
+//@Configuration
 public class AuthorizationServerTokenServicesImpl implements AuthorizationServerTokenServices {
     @Resource
     DefaultTokenServices defaultTokenServices;

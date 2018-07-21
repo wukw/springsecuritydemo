@@ -1,6 +1,7 @@
-package core.auth.config;
+package core.auth.Config;
 
 
+import core.auth.SmsAuth.SmsSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +20,8 @@ public class ResourceServerConfigurer  extends ResourceServerConfigurerAdapter {
     AuthenticationSuccessHandler imoocAuthenticationSuccessHandler;
     @Autowired
     AuthenticationFailureHandler imoocAuthenticationFailureHandler;
+    @Autowired
+    SmsSecurityConfig smsSecurityConfig;
 
 
     private static final String DEMO_RESOURCE_ID = "order";
@@ -40,10 +43,12 @@ public class ResourceServerConfigurer  extends ResourceServerConfigurerAdapter {
                 .anonymous()
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/user/*","/login").permitAll()
+                    .antMatchers("/user/login","/login","/mobile/login").permitAll()
+                    .antMatchers("/user/getuser").hasRole("USER")
                     .anyRequest().authenticated()
                 .and()
                 .csrf().disable();
+        http.apply(smsSecurityConfig);
 
 
     }

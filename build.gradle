@@ -4,7 +4,7 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     ext {
-        springBootVersion = '2.0.2.RELEASE'
+        springBootVersion = '2.0.3.RELEASE'
     }
     repositories {
         jcenter()
@@ -38,10 +38,12 @@ allprojects {
     sourceCompatibility = 1.8
 
     dependencies {
-        compile("org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE")
+        compile("org.springframework.boot:spring-boot-starter-web")
         compile("org.springframework.boot:spring-boot-starter-security")
         compile ("org.springframework.security.oauth:spring-security-oauth2:2.3.3.BUILD-SNAPSHOT")
-        compile 'org.springframework.boot:spring-boot-starter-data-redis'
+
+        // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
         // https://mvnrepository.com/artifact/org.springframework.security/spring-security-jwt
         compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.9.RELEASE'
         // https://mvnrepository.com/artifact/com.auth0/java-jwt
@@ -55,6 +57,13 @@ allprojects {
         compile 'org.springframework.social:spring-social-config:1.1.6.RELEASE'
         
         compile 'org.springframework.social:spring-social-core:1.1.6.RELEASE'
+
+        // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+        compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
+        // https://mvnrepository.com/artifact/commons-io/commons-io
+        compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
+
 
 
 

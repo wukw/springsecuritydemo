@@ -1,8 +1,7 @@
 package core.auth.Handler;
 
 import com.alibaba.fastjson.JSON;
-import core.auth.service.AuthorizationServerTokenServicesImpl;
-import org.apache.commons.codec.binary.StringUtils;
+import core.auth.Service.AuthorizationServerTokenServicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +10,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException;
 import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +27,8 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
 
     @Autowired
     ClientDetailsService clientDetailsService;
-    @Resource
-    AuthorizationServerTokenServicesImpl authorizationServerTokenServicesImpl;
+    @Autowired
+    AuthorizationServerTokenServices authorizationServerTokenServices;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -52,8 +52,7 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
 
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
 
-        System.out.println("客户端"+bCryptPasswordEncoder.encode(clientSecret).toString());
-        System.out.println("db"+clientDetails.getClientSecret());
+
 
         if (clientDetails == null) {
             throw new UnapprovedClientAuthenticationException("clientId对应的配置信息不存在:" + clientId);
@@ -67,7 +66,7 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
 
         OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
 
-        OAuth2AccessToken token = authorizationServerTokenServicesImpl.createAccessToken(oAuth2Authentication);
+        OAuth2AccessToken token = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
 
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(JSON.toJSONString(token));

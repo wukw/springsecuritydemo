@@ -1,4 +1,4 @@
-package core.auth.config;
+package core.auth.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

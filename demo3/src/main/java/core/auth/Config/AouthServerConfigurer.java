@@ -1,9 +1,10 @@
-package core.auth.config;
+package core.auth.Config;
 
-import core.auth.service.AuthorizationServerTokenServicesImpl;
+import core.auth.Service.AuthorizationServerTokenServicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,8 +16,12 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import javax.annotation.Resource;
 
 @Configuration
 @EnableAuthorizationServer
@@ -25,16 +30,28 @@ public class AouthServerConfigurer extends AuthorizationServerConfigurerAdapter 
     private static final String DEMO_RESOURCE_ID = "order";
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
-    AuthorizationServerTokenServicesImpl authorizationServerTokenServices;
+    //@Autowired
+    //AuthorizationServerTokenServicesImpl authorizationServerTokenServices;
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    JwtTokenStore jwtTokenStore;
+    @Autowired
+    JwtAccessTokenConverter jwtAccessTokenConverter;
+
+
+
+
+
+
+
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
                 .withClient("client_1")
                     .authorizedGrantTypes("client_credentials", "refresh_token")
-                    .scopes("select")
+                    .scopes("Role_USER")
                     .secret(bCryptPasswordEncoder.encode("123456").toString())
                 .and()
                 .withClient("client_2")
@@ -48,29 +65,29 @@ public class AouthServerConfigurer extends AuthorizationServerConfigurerAdapter 
         //允许表单认证
         oauthServer.allowFormAuthenticationForClients();
     }
-    @Bean
-    protected UserDetailsService userDetailsService(){
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user_1").password(bCryptPasswordEncoder.encode("123456")).authorities("USER").build());
-        manager.createUser(User.withUsername("user_2").password(bCryptPasswordEncoder.encode("123456")).authorities("USER").build());
-        return manager;
-    }
 
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.tokenServices(authorizationServerTokenServices).tokenStore(inMemoryTokenStore()).authenticationManager(authenticationManager);
+        //endpoints.tokenServices(authorizationServerTokenServices)
+        endpoints  .tokenStore(jwtTokenStore)
+                 .accessTokenConverter(jwtAccessTokenConverter)
+                 .authenticationManager(authenticationManager);
     }
 
-    @Bean
-    public TokenStore inMemoryTokenStore(){
-        return new InMemoryTokenStore();
-    }
+
+
 
     @Bean
-    public DefaultTokenServices myTokenStore(){
-        DefaultTokenServices tokenStoreService =  new DefaultTokenServices();
-        tokenStoreService.setTokenStore(inMemoryTokenStore());
-        return tokenStoreService;
+    protected UserDetailsService userDetailsService(){
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(User.withUsername("user_1").password(bCryptPasswordEncoder.encode("123456")).authorities("ROLE_USER").build());
+        manager.createUser(User.withUsername("user_2").password(bCryptPasswordEncoder.encode("123456")).authorities("ROLE_USER").build());
+        return manager;
     }
+
+
+
+
+
 }

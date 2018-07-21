@@ -1,4 +1,4 @@
-package core.auth.config;
+package core.auth.Config;
 
 import org.springframework.core.env.Environment;
 import org.springframework.social.UserIdSource;
