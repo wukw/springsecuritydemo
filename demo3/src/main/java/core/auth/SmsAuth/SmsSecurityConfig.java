@@ -2,6 +2,7 @@ package core.auth.SmsAuth;
 
 import core.auth.Handler.FailHandler;
 import core.auth.Handler.SuccessHandler;
+import core.auth.Service.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -23,7 +24,7 @@ public class SmsSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurity
     private FailHandler failHandler;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private MyUserDetailService userDetailsService;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {

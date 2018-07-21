@@ -1,7 +1,7 @@
 package core.auth.Handler;
 
 import com.alibaba.fastjson.JSON;
-import core.auth.Service.AuthorizationServerTokenServicesImpl;
+import core.auth.Token.AuthorizationServerTokenServicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,8 +9,6 @@ import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException;
 import org.springframework.security.oauth2.provider.*;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +25,8 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
 
     @Autowired
     ClientDetailsService clientDetailsService;
-    @Autowired
-    AuthorizationServerTokenServices authorizationServerTokenServices;
+    @Resource
+    AuthorizationServerTokenServicesImpl authorizationServerTokenServices;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 

@@ -1,27 +1,17 @@
 package core.auth.Config;
 
-import core.auth.Service.AuthorizationServerTokenServicesImpl;
+import core.auth.Token.AuthorizationServerTokenServicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-
-import javax.annotation.Resource;
 
 @Configuration
 @EnableAuthorizationServer
@@ -30,8 +20,8 @@ public class AouthServerConfigurer extends AuthorizationServerConfigurerAdapter 
     private static final String DEMO_RESOURCE_ID = "order";
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
-    //@Autowired
-    //AuthorizationServerTokenServicesImpl authorizationServerTokenServices;
+    @Autowired
+    AuthorizationServerTokenServicesImpl authorizationServerTokenServices;
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
@@ -69,22 +59,22 @@ public class AouthServerConfigurer extends AuthorizationServerConfigurerAdapter 
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        //endpoints.tokenServices(authorizationServerTokenServices)
-        endpoints  .tokenStore(jwtTokenStore)
+        endpoints.tokenServices(authorizationServerTokenServices);
+        endpoints.tokenStore(jwtTokenStore)
                  .accessTokenConverter(jwtAccessTokenConverter)
                  .authenticationManager(authenticationManager);
     }
 
 
 
-
-    @Bean
-    protected UserDetailsService userDetailsService(){
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user_1").password(bCryptPasswordEncoder.encode("123456")).authorities("ROLE_USER").build());
-        manager.createUser(User.withUsername("user_2").password(bCryptPasswordEncoder.encode("123456")).authorities("ROLE_USER").build());
-        return manager;
-    }
+//
+//    @Bean
+//    protected UserDetailsService userDetailsService(){
+//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//        manager.createUser(User.withUsername("user_1").password(bCryptPasswordEncoder.encode("123456")).authorities("ROLE_USER").build());
+//        manager.createUser(User.withUsername("user_2").password(bCryptPasswordEncoder.encode("123456")).authorities("ROLE_USER").build());
+//        return manager;
+//    }
 
 
 

@@ -1,5 +1,6 @@
 package core.auth.SmsAuth;
 
+import core.auth.Service.MyUserDetailService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -9,13 +10,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
 
-    private UserDetailsService userDetailsService;
+    private MyUserDetailService userDetailsService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         SmsCodeAuthenticationToken authenticationToken = (SmsCodeAuthenticationToken) authentication;
 
-        UserDetails user = userDetailsService.loadUserByUsername((String) authenticationToken.getPrincipal());
+        UserDetails user = userDetailsService.loadUserByPhone((String) authenticationToken.getPrincipal());
 
         if (user == null) {
             throw new InternalAuthenticationServiceException("无法获取用户信息");
@@ -38,7 +39,7 @@ public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
         return userDetailsService;
     }
 
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
+    public void setUserDetailsService(MyUserDetailService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 }

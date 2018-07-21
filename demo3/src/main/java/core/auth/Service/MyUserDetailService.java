@@ -19,8 +19,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Component
-public class UserDetailService implements UserDetailsManager,Serializable {
+@Component
+public class MyUserDetailService implements UserDetailsManager,Serializable {
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -67,6 +67,31 @@ public class UserDetailService implements UserDetailsManager,Serializable {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("查询用户");
         String userJson = HttpUtil.doGet(loadUserByUsernameUrl+"/"+username);
+        return jsonUserToUserDetails(userJson,username);
+    }
+
+    /**
+     * 手机查询登陆
+     * @param phone
+     * @return
+     * @throws UsernameNotFoundException
+     */
+    public UserDetails loadUserByPhone(String phone) throws UsernameNotFoundException {
+        System.out.println("查询用户");
+        String userJson = HttpUtil.doGet(loadUserByUsernameUrl+"/"+phone);
+        return jsonUserToUserDetails(userJson,phone);
+    }
+
+
+
+
+    /**
+     * db user to UserDetails
+     * @param userJson
+     * @param username
+     * @return
+     */
+    public UserDetails jsonUserToUserDetails(String userJson,String username){
         User user = null;
         try{
             user = JSON.parseObject(userJson, User.class);
@@ -77,7 +102,7 @@ public class UserDetailService implements UserDetailsManager,Serializable {
             throw new UsernameNotFoundException(username);
         else{
             List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-            authorityList.add(new SimpleGrantedAuthority("User"));
+            authorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
             user.setAuthority(authorityList);
             user.setIsAccountNonExpired(1);
             user.setIsAccountNonLocked(1);
@@ -85,10 +110,7 @@ public class UserDetailService implements UserDetailsManager,Serializable {
             user.setIsCredentialsNonExpired(1);
             user.setPassword(bCryptPasswordEncoder.encode("123456"));
             UserDetailsModel userDetailsModel = new UserDetailsModel(user);
-
-
-            org.springframework.security.core.userdetails.User userSpring =  new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),authorityList);
-            return userSpring;
+            return userDetailsModel;
         }
     }
 }
