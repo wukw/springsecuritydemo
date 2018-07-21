@@ -1,4 +1,6 @@
 rootProject.name = 'securitydemo'
 include 'demo1'
 include 'demo3'
+include 'AuthServer'
+include 'ResourceServer'
 
